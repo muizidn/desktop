@@ -589,8 +589,7 @@ class _TextFieldState extends State<TextField>
 
     final Widget result = ScrollConfiguration(
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-      child: TextFieldTapRegion(
-        child: MouseRegion(
+      child: MouseRegion(
           cursor: effectiveMouseCursor,
           onEnter: (_) => _handleHover(true),
           onExit: (_) => _handleHover(false),
@@ -620,7 +619,6 @@ class _TextFieldState extends State<TextField>
             ),
           ),
         ),
-      ),
     );
 
     return result;
