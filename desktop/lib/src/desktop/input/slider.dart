@@ -1,10 +1,10 @@
 import 'dart:math' as math;
 import 'dart:ui' show lerpDouble;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/foundation.dart';
 
 import '../dialogs/tooltip.dart';
 import '../theme/theme.dart';
@@ -16,7 +16,7 @@ const Duration _kDuration = Duration(milliseconds: 100);
 
 class Slider extends StatefulWidget {
   const Slider({
-    Key? key,
+    super.key,
     required this.value,
     this.onChanged,
     this.onChangeStart,
@@ -26,8 +26,8 @@ class Slider extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.enableTooltip = false,
-  })  : assert(value >= min && value <= max),
-        super(key: key);
+    this.theme,
+  }) : assert(value >= min && value <= max);
 
   final double value;
 
@@ -47,8 +47,11 @@ class Slider extends StatefulWidget {
 
   final bool enableTooltip;
 
+  /// The style [SliderThemeData] of the slider.
+  final SliderThemeData? theme;
+
   @override
-  _SliderState createState() => _SliderState();
+  State<Slider> createState() => _SliderState();
 }
 
 class _SliderState extends State<Slider> with TickerProviderStateMixin {
@@ -150,7 +153,7 @@ class _SliderState extends State<Slider> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final active = widget.onChanged != null;
-    final theme = SliderTheme.of(context);
+    final theme = SliderTheme.of(context).merge(widget.theme);
 
     final Color activeColor = theme.activeColor!;
     final hoverColor = theme.activeHoverColor!;
@@ -208,9 +211,9 @@ class _SliderState extends State<Slider> with TickerProviderStateMixin {
     if (widget.enableTooltip) {
       return Tooltip(
         message: (widget.value * 100).round().toString(),
-        child: result,
-        height: 14.0,
+        theme: const TooltipThemeData(height: 14.0),
         preferBelow: false,
+        child: result,
       );
     } else {
       return result;
@@ -220,7 +223,6 @@ class _SliderState extends State<Slider> with TickerProviderStateMixin {
 
 class _SliderRenderObjectWidget extends LeafRenderObjectWidget {
   const _SliderRenderObjectWidget({
-    Key? key,
     required this.value,
     required this.state,
     required this.activeColor,
@@ -232,7 +234,7 @@ class _SliderRenderObjectWidget extends LeafRenderObjectWidget {
     this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
-  }) : super(key: key);
+  });
 
   final double value;
   final Color activeColor;
@@ -555,11 +557,11 @@ class _RenderSlider extends RenderConstrainedBox {
       color = activeColor;
 
       if (hovering || _state._hoverPositionController.isAnimating) {
-        //color = Color.lerp(color, hoverColor, _state._hoverPosition.value)!;
+        // TODO(as): color = Color.lerp(color, hoverColor, _state._hoverPosition.value)!;
       }
 
       if (_dragging || _state._positionController.isAnimating) {
-        //color = Color.lerp(color, activeColor, _state._position.value)!;
+        // TODO(as): color = Color.lerp(color, activeColor, _state._position.value)!;
       }
     }
 

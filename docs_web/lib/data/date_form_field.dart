@@ -1,13 +1,13 @@
 import 'package:desktop/desktop.dart';
-import 'package:flutter/services.dart';
-import '../defaults.dart';
 import 'package:intl/intl.dart';
 
+import '../defaults.dart';
+
 class DateFormFieldPage extends StatefulWidget {
-  DateFormFieldPage({Key? key}) : super(key: key);
+  const DateFormFieldPage({super.key});
 
   @override
-  _DateFormFieldPageState createState() => _DateFormFieldPageState();
+  State<DateFormFieldPage> createState() => _DateFormFieldPageState();
 }
 
 class _DateFormFieldPageState extends State<DateFormFieldPage> {
@@ -15,7 +15,7 @@ class _DateFormFieldPageState extends State<DateFormFieldPage> {
   final _focusNode = FocusNode();
   DateTime _selectedDate = DateTime.now();
 
-  AutovalidateMode _autovalidateMode = AutovalidateMode.always;
+  AutovalidateMode _autovalidateMode = AutovalidateMode.onUserInteraction;
 
   void _validate() {
     final textTheme = Theme.of(context).textTheme;
@@ -36,7 +36,7 @@ class _DateFormFieldPageState extends State<DateFormFieldPage> {
     const basicExample = 'return DateFormField();';
 
     return Defaults(
-      header: 'Date form field',
+      header: 'Date Form Field',
       items: [
         ItemTitle(
           body: (context) => Container(

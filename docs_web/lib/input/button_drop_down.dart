@@ -2,10 +2,10 @@ import 'package:desktop/desktop.dart';
 import '../defaults.dart';
 
 class ButtonDropDownPage extends StatefulWidget {
-  ButtonDropDownPage({Key? key}) : super(key: key);
+  const ButtonDropDownPage({super.key});
 
   @override
-  _ButtonDropDownPageState createState() => _ButtonDropDownPageState();
+  State<ButtonDropDownPage> createState() => _ButtonDropDownPageState();
 }
 
 class _ButtonDropDownPageState extends State<ButtonDropDownPage> {
@@ -154,7 +154,7 @@ return SizedBox(
           title: 'Custom background',
         ),
       ],
-      header: 'Drop down menu',
+      header: 'Drop Down Menu',
     );
   }
 }

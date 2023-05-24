@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../theme/theme.dart';
 import '../../text/text_field.dart';
+import '../../theme/theme.dart';
 
 export 'package:flutter/services.dart' show SmartDashesType, SmartQuotesType;
 
@@ -25,7 +25,6 @@ class TextFormField extends FormField<String> {
     TextAlign textAlign = TextAlign.start,
     bool autofocus = false,
     bool readOnly = false,
-    ToolbarOptions? toolbarOptions,
     bool? showCursor,
     String obscuringCharacter = '•',
     bool obscureText = false,
@@ -132,7 +131,7 @@ class TextFormField extends FormField<String> {
                 DecoratedBox(
                   decoration: decoration,
                   child: Padding(
-                    padding: decoration.padding!,
+                    padding: decoration.padding,
                     child: Row(
                       children: [
                         if (prefix != null)
@@ -162,7 +161,6 @@ class TextFormField extends FormField<String> {
                                 textDirection: textDirection,
                                 textCapitalization: textCapitalization,
                                 autofocus: autofocus,
-                                toolbarOptions: toolbarOptions,
                                 readOnly: readOnly,
                                 showCursor: showCursor,
                                 obscuringCharacter: obscuringCharacter,

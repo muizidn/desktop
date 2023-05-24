@@ -18,19 +18,49 @@ class SliderThemeData {
     this.hightlightColor,
   });
 
+  /// The disabled color.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// colorScheme.disabled
+  /// ```
   final Color? disabledColor;
 
+  /// The active color.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// colorScheme.primary[60]
+  /// ```
   final Color? activeColor;
 
+  /// The active hover color.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// textTheme.textHigh
+  /// ```
   final Color? activeHoverColor;
 
+  /// The track color.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// colorScheme.shade[30]
+  /// ```
   final Color? trackColor;
 
+  /// The highlight color.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// textTheme.textLow
+  /// ```
   final Color? hightlightColor;
 
   /// Makes a copy of [SliderThemeData] overwriting selected fields.
@@ -85,23 +115,49 @@ class SliderThemeData {
 
   @override
   String toString() {
-    return '''disabledColor:;activeColor:;activeHoverColor:;trackColor:;hightlightColor:;''';
+    return r'''
+disabledColor: The disabled color.
+ 
+ Defaults to:
+ 
+ ```dart
+ colorScheme.disabled
+ ```;;activeColor: The active color.
+ 
+ Defaults to:
+ 
+ ```dart
+ colorScheme.primary[60]
+ ```;;activeHoverColor: The active hover color.
+ 
+ Defaults to:
+ 
+ ```dart
+ textTheme.textHigh
+ ```;;trackColor: The track color.
+ 
+ Defaults to:
+ 
+ ```dart
+ colorScheme.shade[30]
+ ```;;hightlightColor: The highlight color.
+ 
+ Defaults to:
+ 
+ ```dart
+ textTheme.textLow
+ ```;;
+''';
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-    return other is SliderThemeData &&
+  bool operator ==(covariant SliderThemeData other) {
+    return identical(this, other) ||
         other.disabledColor == disabledColor &&
-        other.activeColor == activeColor &&
-        other.activeHoverColor == activeHoverColor &&
-        other.trackColor == trackColor &&
-        other.hightlightColor == hightlightColor;
+            other.activeColor == activeColor &&
+            other.activeHoverColor == activeHoverColor &&
+            other.trackColor == trackColor &&
+            other.hightlightColor == hightlightColor;
   }
 }
 

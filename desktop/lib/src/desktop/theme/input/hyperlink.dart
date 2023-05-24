@@ -6,7 +6,6 @@ import '../theme_text.dart';
 part 'hyperlink.g.dart';
 
 const double _kLineThickness = 1.0;
-const HSLColor _kDefaultColor = HSLColor.fromAHSL(1.0, 210, 0.9, 0.56);
 
 /// Theme data for [HyperlinkButton].
 @immutable
@@ -19,13 +18,40 @@ class _HyperlinkThemeData {
   final TextTheme textTheme;
   final ColorScheme colorScheme;
 
+  /// The color of the hyperlink text.
   ///
-  Color get color => _kDefaultColor.toColor();
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// PrimaryColors.dodgerBlue.primaryColor
+  /// .withBrightness(colorScheme.brightness)
+  /// .color
+  /// ```
+  Color get color => PrimaryColors.dodgerBlue.primaryColor
+      .withBrightness(colorScheme.brightness)
+      .color;
 
+  /// The color of the hyperlink text when hovered.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// textTheme.textHigh
+  /// ```
   Color get hoverColor => textTheme.textHigh;
 
+  /// The text style of the hyperlink.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// textTheme.body2.copyWith(
+  ///   fontSize: 14.0,
+  ///   decoration: TextDecoration.underline,
+  ///   decorationThickness: 1.0,
+  ///   overflow: TextOverflow.ellipsis,
+  /// )
+  /// ```
   TextStyle get textStyle => textTheme.body2.copyWith(
         fontSize: 14.0,
         decoration: TextDecoration.underline,
@@ -33,6 +59,12 @@ class _HyperlinkThemeData {
         overflow: TextOverflow.ellipsis,
       );
 
+  /// The color of the hyperlink text when highlighted.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// textTheme.textLow
+  /// ```
   Color get highlightColor => textTheme.textLow;
 }

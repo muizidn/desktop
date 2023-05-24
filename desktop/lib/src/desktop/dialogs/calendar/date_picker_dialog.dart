@@ -1,15 +1,10 @@
-import 'dart:math' as math;
-
-import 'package:flutter/foundation.dart' show defaultTargetPlatform;
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../theme/theme.dart';
+import '../dialog.dart';
 import 'calendar_date.dart';
 import 'date_utlis.dart';
 import 'month_picker.dart';
-import '../dialog.dart';
-import '../../theme/theme.dart';
 
 /// Date picker dialog.
 ///
@@ -128,22 +123,30 @@ class _DatePickerDialogState extends State<DatePickerDialog> {
           vertical: 0,
         ),
       ),
-      child: Dialog(
-        allowScroll: false,
-        body: Align(
-          alignment: Alignment.centerLeft,
-          child: CalendarDate(
-            firstDate: widget.firstDate,
-            initialDate: widget.initialDate,
-            lastDate: widget.lastDate,
-            onDateChanged: (_) {},
-            currentDate: widget.currentDate,
-            initialCalendarMode: widget.initialCalendarMode,
-            key: _calendarPickerKey,
-            selectableDayPredicate: widget.selectableDayPredicate,
-            onDateSelected: (selectedDate) =>
-                Navigator.pop(context, selectedDate),
-          ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ColoredBox(
+              color: Theme.of(context).colorScheme.background[0],
+              child: CalendarDate(
+                key: _calendarPickerKey,
+                firstDate: widget.firstDate,
+                initialDate: widget.initialDate,
+                lastDate: widget.lastDate,
+                onDateChanged: (_) {},
+                currentDate: widget.currentDate,
+                initialCalendarMode: widget.initialCalendarMode,
+                selectableDayPredicate: widget.selectableDayPredicate,
+                onDateSelected: (selectedDate) => Navigator.pop(
+                  context,
+                  selectedDate,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -2,10 +2,10 @@ import 'package:desktop/desktop.dart';
 import '../defaults.dart';
 
 class DialogMessagePage extends StatefulWidget {
-  DialogMessagePage({Key? key}) : super(key: key);
+  const DialogMessagePage({super.key});
 
   @override
-  _DialogPageState createState() => _DialogPageState();
+  State<DialogMessagePage> createState() => _DialogPageState();
 }
 
 class _DialogPageState extends State<DialogMessagePage> {
@@ -15,6 +15,7 @@ class _DialogPageState extends State<DialogMessagePage> {
 ''';
 
     return Defaults(
+      styleItems: Defaults.createStyle(MessageTheme.of(context).toString()),
       items: [
         // ItemTitle(
         //   body: (context) => Column(

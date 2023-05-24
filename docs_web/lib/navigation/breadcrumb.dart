@@ -2,10 +2,10 @@ import 'package:desktop/desktop.dart';
 import '../defaults.dart';
 
 class BreadcrumbPage extends StatefulWidget {
-  BreadcrumbPage({Key? key}) : super(key: key);
+  const BreadcrumbPage({super.key});
 
   @override
-  _BreadcrumbPageState createState() => _BreadcrumbPageState();
+  State<BreadcrumbPage> createState() => _BreadcrumbPageState();
 }
 
 class _BreadcrumbPageState extends State<BreadcrumbPage> {
@@ -37,9 +37,26 @@ class _BreadcrumbPageState extends State<BreadcrumbPage> {
   @override
   Widget build(BuildContext context) {
     final textController = TextEditingController(text: '''
+return Column(
+  children: [
+    Padding(
+      padding: const EdgeInsets.only(left: 16.0),
+      child: Defaults.createSubheader(context, 'Page \$count'),
+    ),
+    Expanded(
+      child: Center(
+        child: Button.text(
+          'Next page',
+          onPressed: pushPage,
+        ),
+      ),
+    ),
+  ],
+);
 ''');
 
     return Defaults(
+      styleItems: Defaults.createStyle(BreadcrumbTheme.of(context).toString()),
       items: [
         ItemTitle(
           body: (context) => Breadcrumb(

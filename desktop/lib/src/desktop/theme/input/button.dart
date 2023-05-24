@@ -103,9 +103,9 @@ class _ButtonThemeData {
   /// Defaults to:
   /// 
   /// ```dart 
-  /// textTheme.textLow
+  /// colorScheme.primary[kHighlightColorIndex]
   /// ```
-  Color get color => textTheme.textLow;
+  Color get color => colorScheme.primary[kHighlightColorIndex];
 
   /// The color when the button has focus.
   ///
@@ -130,9 +130,9 @@ class _ButtonThemeData {
   /// Defaults to:
   /// 
   /// ```dart
-  /// colorScheme.primary[60]
+  /// textTheme.textLow
   /// ```
-  Color get highlightColor => colorScheme.primary[kHighlightColorIndex];
+  Color get highlightColor => textTheme.textLow;
 
   /// The background color when the button is filled.
   ///
@@ -197,7 +197,7 @@ class _ButtonThemeData {
   /// ```
   Color get highlightForeground => textTheme.textHigh;
 
-  /// The duraton of the animation.
+  /// The duration of the animation.
   /// 
   /// Defaults to:
   /// 

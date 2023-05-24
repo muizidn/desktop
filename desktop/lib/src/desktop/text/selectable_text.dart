@@ -1,9 +1,8 @@
+import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
+
 import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/gestures.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-
-import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
 import '../theme/theme.dart';
 
@@ -57,7 +56,7 @@ class _SelectionGestureDetectorBuilder
   }
 
   @override
-  void onSingleTapUp(TapUpDetails details) {
+  void onSingleTapUp(TapDragUpDetails details) {
     editableText.hideToolbar();
     if (delegate.selectionEnabled) {
       switch (defaultTargetPlatform) {
@@ -83,6 +82,8 @@ class _SelectionGestureDetectorBuilder
         case TargetPlatform.linux:
         case TargetPlatform.windows:
           renderEditable.selectPosition(cause: SelectionChangedCause.tap);
+          break;
+        default:
           break;
       }
     }
@@ -116,7 +117,7 @@ class SelectableText extends StatefulWidget {
   /// Creates a selectable text.
   const SelectableText(
     String this.text, {
-    Key? key,
+    super.key,
     this.autofocus = false,
     this.cursorWidth = _kCursorWidth,
     this.focusNode,
@@ -136,25 +137,18 @@ class SelectableText extends StatefulWidget {
     this.selectionControls,
     this.dragStartBehavior = DragStartBehavior.start,
     this.onSelectionChanged,
-    ToolbarOptions? toolbarOptions,
   })  : assert(
           (maxLines == null) || (minLines == null) || (maxLines >= minLines),
           "minLines can't be greater than maxLines",
         ),
         assert(maxLines == null || maxLines > 0),
         assert(minLines == null || minLines > 0),
-        toolbarOptions = toolbarOptions ??
-            const ToolbarOptions(
-              copy: true,
-              selectAll: true,
-            ),
-        textSpan = null,
-        super(key: key);
+        textSpan = null;
 
   ///
   const SelectableText.rich(
     TextSpan this.textSpan, {
-    Key? key,
+    super.key,
     this.autofocus = false,
     this.cursorWidth = _kCursorWidth,
     this.focusNode,
@@ -174,20 +168,13 @@ class SelectableText extends StatefulWidget {
     this.textWidthBasis,
     this.dragStartBehavior = DragStartBehavior.start,
     this.onSelectionChanged,
-    ToolbarOptions? toolbarOptions,
   })  : assert(
           (maxLines == null) || (minLines == null) || (maxLines >= minLines),
           "minLines can't be greater than maxLines",
         ),
         assert(maxLines == null || maxLines > 0),
         assert(minLines == null || minLines > 0),
-        toolbarOptions = toolbarOptions ??
-            const ToolbarOptions(
-              copy: true,
-              selectAll: true,
-            ),
-        text = null,
-        super(key: key);
+        text = null;
 
   ///
   final String? text;
@@ -217,8 +204,6 @@ class SelectableText extends StatefulWidget {
   final TextDirection? textDirection;
 
   final TextStyle? style;
-
-  final ToolbarOptions toolbarOptions;
 
   /// {@macro flutter.widgets.editableText.minLines}
   final int? minLines;
@@ -254,7 +239,7 @@ class SelectableText extends StatefulWidget {
   final TextWidthBasis? textWidthBasis;
 
   @override
-  _SelectableTextState createState() => _SelectableTextState();
+  State<SelectableText> createState() => _SelectableTextState();
 }
 
 class _SelectableTextState extends State<SelectableText>
@@ -446,7 +431,6 @@ class _SelectableTextState extends State<SelectableText>
       style: widget.style ?? textStyle,
       textAlign: widget.textAlign,
       textDirection: widget.textDirection,
-      toolbarOptions: widget.toolbarOptions,
       onSelectionHandleTapped: _handleSelectionHandleTapped,
       selectionHeightStyle: ui.BoxHeightStyle.tight,
       selectionWidthStyle: ui.BoxWidthStyle.tight,

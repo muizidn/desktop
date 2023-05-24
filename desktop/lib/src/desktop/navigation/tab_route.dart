@@ -1,20 +1,23 @@
 import 'package:flutter/widgets.dart';
 
 import '../localizations.dart';
+import '../theme/theme.dart';
 
 class TabMenuRoute<T> extends PopupRoute<T> {
   TabMenuRoute({
     required WidgetBuilder pageBuilder,
     required BuildContext context,
     String? barrierLabel,
-    RouteSettings? settings,
     required Color barrierColor,
     this.axis = Axis.horizontal,
+    super.settings,
   })  : _pageBuilder = pageBuilder,
         _barrierLabel = barrierLabel ??
             DesktopLocalizations.of(context).modalBarrierDismissLabel,
         _barrierColor = barrierColor,
-        super(settings: settings);
+        _animationCurve = TabTheme.of(context).menuTrasitionCurve!,
+        _animationReverseCurve = TabTheme.of(context).menuTrasitionReverseCurve!,
+        _transitionDuration = TabTheme.of(context).menuTransitionDuration!; 
 
   final Axis axis;
 
@@ -24,7 +27,11 @@ class TabMenuRoute<T> extends PopupRoute<T> {
 
   Animation<double>? _animation;
 
-  static final Curve _animationCurve = Curves.easeInOutSine;
+  final Curve _animationCurve;
+
+  final Curve _animationReverseCurve;
+
+  final Duration _transitionDuration;
 
   @override
   bool get barrierDismissible => true;
@@ -37,8 +44,9 @@ class TabMenuRoute<T> extends PopupRoute<T> {
   Color? get barrierColor => _barrierColor;
   final Color _barrierColor;
 
+
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 300);
+  Duration get transitionDuration => _transitionDuration;
 
   @override
   Animation<double> createAnimation() {
@@ -46,7 +54,7 @@ class TabMenuRoute<T> extends PopupRoute<T> {
     _animation = CurvedAnimation(
       parent: super.createAnimation(),
       curve: _animationCurve,
-      reverseCurve: _animationCurve,
+      reverseCurve: _animationReverseCurve,
     );
 
     final Offset begin = axis == Axis.vertical
@@ -66,9 +74,9 @@ class TabMenuRoute<T> extends PopupRoute<T> {
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
     return Semantics(
-      child: _pageBuilder(context),
       scopesRoute: true,
       explicitChildNodes: true,
+      child: _pageBuilder(context),
     );
   }
 

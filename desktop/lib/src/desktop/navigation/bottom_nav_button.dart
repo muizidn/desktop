@@ -10,13 +10,13 @@ import 'nav.dart';
 class NavBottomGroup extends StatefulWidget {
   ///
   const NavBottomGroup({
-    Key? key,
+    super.key,
     required this.navItems,
     required this.enabled,
     required this.index,
     required this.onChanged,
     required this.navWidgets,
-  }) : super(key: key);
+  });
 
   final int index;
 
@@ -29,7 +29,7 @@ class NavBottomGroup extends StatefulWidget {
   final ValueChanged<int> onChanged;
 
   @override
-  _NavBottomGroupState createState() => _NavBottomGroupState();
+  State<NavBottomGroup> createState() => _NavBottomGroupState();
 }
 
 class _NavBottomGroupState extends State<NavBottomGroup>
@@ -123,10 +123,10 @@ class _NavBottomGroupState extends State<NavBottomGroup>
         fit: StackFit.passthrough,
         children: <Widget>[
           Row(
-            children: titleItems,
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: titleItems,
           ),
           _SideIconRenderObjectWidget(
             vsync: this,
@@ -150,10 +150,9 @@ class _NavBottomGroupState extends State<NavBottomGroup>
 
 class _NavButtonItem extends SingleChildRenderObjectWidget {
   const _NavButtonItem({
-    Key? key,
     required this.onLayout,
     required this.button,
-  }) : super(key: key, child: button);
+  }) : super(child: button);
 
   final ValueChanged<Size> onLayout;
   final Widget button;
@@ -171,7 +170,7 @@ class _NavButtonItem extends SingleChildRenderObjectWidget {
 }
 
 class _NavButtonRenderItem extends RenderProxyBox {
-  _NavButtonRenderItem(this.onLayout, [RenderBox? child]) : super(child);
+  _NavButtonRenderItem(this.onLayout);
 
   ValueChanged<Size> onLayout;
 
@@ -184,7 +183,6 @@ class _NavButtonRenderItem extends RenderProxyBox {
 
 class _SideIconRenderObjectWidget extends LeafRenderObjectWidget {
   const _SideIconRenderObjectWidget({
-    Key? key,
     required this.index,
     required this.vsync,
     required this.additionalConstraints,
@@ -194,7 +192,7 @@ class _SideIconRenderObjectWidget extends LeafRenderObjectWidget {
     required this.lengths,
     required this.crossLength,
     required this.text,
-  }) : super(key: key);
+  });
 
   final int index;
   final TickerProvider vsync;
@@ -237,18 +235,17 @@ class _RenderIconSide extends RenderConstrainedBox {
   _RenderIconSide({
     required int index,
     required TickerProvider vsync,
-    required BoxConstraints additionalConstraints,
     required Duration duration,
     required List<String> text,
     required this.foreground,
     required this.sideLength,
     required this.crossLength,
     required this.lengths,
+    required super.additionalConstraints,
   })  : _oldIndex = index,
         _index = index,
         _vsync = vsync,
-        _text = text,
-        super(additionalConstraints: additionalConstraints) {
+        _text = text {
     _positionController = AnimationController(
       duration: duration,
       value: 0.0,
@@ -345,8 +342,8 @@ class _RenderIconSide extends RenderConstrainedBox {
     final Canvas canvas = context.canvas;
     final Paint paint = Paint()..color = foreground;
 
-    Rect _rectLast;
-    Rect _rectNew;
+    Rect rectLast;
+    Rect rectNew;
 
     final double lOldOffset =
         lengths.sublist(0, oldIndex).fold(0.0, (value, elem) => value + elem);
@@ -360,12 +357,12 @@ class _RenderIconSide extends RenderConstrainedBox {
     final double dx = offset.dx + lOffset;
     final double oldDx = offset.dx + lOldOffset;
 
-    _rectLast = Rect.fromLTWH(oldDx, dy, oldLength, sideLength);
-    _rectNew = Rect.fromLTWH(dx, dy, length, sideLength);
+    rectLast = Rect.fromLTWH(oldDx, dy, oldLength, sideLength);
+    rectNew = Rect.fromLTWH(dx, dy, length, sideLength);
 
-    final RectTween _rectTween = RectTween(begin: _rectLast, end: _rectNew);
+    final RectTween rectTween = RectTween(begin: rectLast, end: rectNew);
 
-    canvas.drawRect(_rectTween.lerp(position.value)!, paint);
+    canvas.drawRect(rectTween.lerp(position.value)!, paint);
     // _textPainter.layout();
     // _textPainter.paint(canvas,
     //     Offset(_rectTween.lerp(position.value)!.left + 8.0, offset.dy + 24));

@@ -2,10 +2,10 @@ import 'package:desktop/desktop.dart';
 import '../defaults.dart';
 
 class TextFormFieldPage extends StatefulWidget {
-  TextFormFieldPage({Key? key}) : super(key: key);
+  const TextFormFieldPage({super.key});
 
   @override
-  _TextFormFieldPageState createState() => _TextFormFieldPageState();
+  State<TextFormFieldPage> createState() => _TextFormFieldPageState();
 }
 
 class _TextFormFieldPageState extends State<TextFormFieldPage> {
@@ -28,7 +28,9 @@ class _TextFormFieldPageState extends State<TextFormFieldPage> {
         title: const Text('Login'),
         actions: [
           DialogAction(
-              title: 'Ok', onPressed: () => Navigator.of(context).pop())
+            title: 'Ok',
+            onPressed: () => Navigator.of(context).pop(),
+          )
         ],
         body: Text.rich(
           TextSpan(
@@ -62,7 +64,7 @@ class _TextFormFieldPageState extends State<TextFormFieldPage> {
     const basicExample = 'return TextFormField();';
 
     return Defaults(
-      header: 'Text form field',
+      header: 'Text Form Field',
       items: [
         ItemTitle(
           body: (context) => Container(
@@ -77,7 +79,7 @@ class _TextFormFieldPageState extends State<TextFormFieldPage> {
                   padding: const EdgeInsets.all(40.0),
                   children: [
                     TextFormField(
-                      prefix: 'email',
+                      prefix: 'Email',
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       onChanged: (value) => _email = value,
@@ -94,7 +96,7 @@ class _TextFormFieldPageState extends State<TextFormFieldPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0),
                       child: TextFormField(
-                        prefix: 'password',
+                        prefix: 'Password',
                         obscureText: true,
                         keyboardType: TextInputType.visiblePassword,
                         textInputAction: TextInputAction.done,

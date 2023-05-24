@@ -30,6 +30,7 @@ class ListTableHeader {
   /// The children for the header cells.
   final List<Widget>? children;
 
+  /// THe column [BorderSize].
   final BorderSide? columnBorder;
 
   /// The height of the header.
@@ -67,8 +68,10 @@ class ListTableRow {
   /// Default to 40.0.
   final double? itemExtent;
 
+  /// Callback for when the row is pressed.
   final RowPressedCallback? onPressed;
 
+  /// Callback for when the row receives a secondary press.
   final RowPressedCallback? onSecondaryPress;
 }
 
@@ -128,7 +131,7 @@ class ListTable extends StatefulWidget {
   // TODO(as): final bool collapseOnDrag;
 
   @override
-  _ListTableState createState() => _ListTableState();
+  State<ListTable> createState() => _ListTableState();
 }
 
 class _ListTableState extends State<ListTable> {
@@ -232,12 +235,6 @@ class _ListTableState extends State<ListTable> {
               isDraggingColumn ? MouseCursor.defer : SystemMouseCursors.click,
           child: LongPressDraggable<int>(
             data: col,
-            child: Container(
-              color: Theme.of(context).colorScheme.background[0],
-              height: widget.header.itemExtent,
-              width: colSizes[col],
-              child: result,
-            ),
             childWhenDragging: const SizedBox(),
             onDragStarted: () {
               setState(() {
@@ -257,6 +254,12 @@ class _ListTableState extends State<ListTable> {
             },
             maxSimultaneousDrags: 1,
             feedback: createHeaderFeedback(mappedIndex, colSizes[col]),
+            child: Container(
+              color: Theme.of(context).colorScheme.background[0],
+              height: widget.header.itemExtent,
+              width: colSizes[col],
+              child: result,
+            ),
           ),
         );
       }).toList(),
@@ -304,7 +307,7 @@ class _ListTableState extends State<ListTable> {
       child: GestureDetector(
         onTapUp: tableRow.onPressed != null
             ? (event) {
-                final overlay = Overlay.of(context)!.context.findRenderObject();
+                final overlay = Overlay.of(context).context.findRenderObject();
                 final position = RelativeRect.fromRect(
                   Offset(event.globalPosition.dx, event.globalPosition.dy) &
                       Size.zero,
@@ -334,7 +337,7 @@ class _ListTableState extends State<ListTable> {
             : null,
         onSecondaryTapUp: tableRow.onSecondaryPress != null
             ? (event) {
-                final overlay = Overlay.of(context)!.context.findRenderObject();
+                final overlay = Overlay.of(context).context.findRenderObject();
                 final position = RelativeRect.fromRect(
                   Offset(event.globalPosition.dx, event.globalPosition.dy) &
                       Size.zero,
@@ -706,6 +709,8 @@ class _ListTableState extends State<ListTable> {
             hoverColor: listTableTheme.borderHoverColor!,
             draggingColumnTargetItemIndex: draggingColumnTargetItemIndex,
             isDraggingColumn: isDraggingColumn,
+            rowCount: widget.rows.length + 1,
+            targetCount: targetChildren.length,
             children: [
               createHeader(),
               ...List.generate(
@@ -716,8 +721,6 @@ class _ListTableState extends State<ListTable> {
               ),
               ...targetChildren
             ],
-            rowCount: widget.rows.length + 1,
-            targetCount: targetChildren.length,
           );
         }
       },
@@ -728,8 +731,7 @@ class _ListTableState extends State<ListTable> {
 }
 
 class _ListTableBorder extends MultiChildRenderObjectWidget {
-  _ListTableBorder({
-    super.key,
+  const _ListTableBorder({
     required super.children,
     required this.headerColumnBorder,
     required this.tableBorder,
@@ -789,8 +791,7 @@ class _ListTableBorder extends MultiChildRenderObjectWidget {
 }
 
 class _ListTableRows extends MultiChildRenderObjectWidget {
-  _ListTableRows({
-    super.key,
+  const _ListTableRows({
     required super.children,
     required this.headerColumnBorder,
     required this.tableBorder,

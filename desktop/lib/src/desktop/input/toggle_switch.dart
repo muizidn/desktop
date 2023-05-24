@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
@@ -20,12 +19,13 @@ const double _kStrokeWidth = 2.0;
 
 class ToggleSwitch extends StatefulWidget {
   const ToggleSwitch({
-    Key? key,
+    super.key,
     required this.value,
     this.onChanged,
     this.focusNode,
     this.autofocus = false,
-  }) : super(key: key);
+    this.theme,
+  });
 
   final bool value;
 
@@ -35,8 +35,11 @@ class ToggleSwitch extends StatefulWidget {
 
   final bool autofocus;
 
+  /// The style [ToggleSwitchThemeData] of the toggle switch.
+  final ToggleSwitchThemeData? theme;
+
   @override
-  _ToggleSwitchState createState() => _ToggleSwitchState();
+  State<ToggleSwitch> createState() => _ToggleSwitchState();
 }
 
 class _ToggleSwitchState extends State<ToggleSwitch>
@@ -140,14 +143,15 @@ class _ToggleSwitchState extends State<ToggleSwitch>
 
   @override
   Widget build(BuildContext context) {
-    final theme = ToggleSwitchTheme.of(context);
+    final ToggleSwitchThemeData theme =
+        ToggleSwitchTheme.of(context).merge(widget.theme);
 
-    final activeColor = theme.activeColor!;
-    final hoverColor = theme.activeHoverColor!;
-    final inactiveColor = theme.inactiveColor!;
-    final foregroundColor = theme.foreground!;
+    final Color activeColor = theme.activeColor!;
+    final Color hoverColor = theme.activeHoverColor!;
+    final Color inactiveColor = theme.inactiveColor!;
+    final Color foregroundColor = theme.foreground!;
     // TODO(as): final focusColor = theme.activeHoverColor!;
-    final disabledColor = theme.disabledColor!;
+    final Color disabledColor = theme.disabledColor!;
 
     const Size size = Size(_kWidth, _kHeight);
 
@@ -189,7 +193,6 @@ class _ToggleSwitchState extends State<ToggleSwitch>
 
 class _ToggleSwitchRenderObjectWidget extends LeafRenderObjectWidget {
   const _ToggleSwitchRenderObjectWidget({
-    Key? key,
     this.onChanged,
     required this.value,
     required this.state,
@@ -200,7 +203,7 @@ class _ToggleSwitchRenderObjectWidget extends LeafRenderObjectWidget {
     required this.hoverColor,
     required this.hovering,
     required this.additionalConstraints,
-  }) : super(key: key);
+  });
 
   final bool value;
   final _ToggleSwitchState state;
@@ -255,7 +258,7 @@ class _RenderToggleSwitch extends RenderConstrainedBox {
     required Color disabledColor,
     required Color hoverColor,
     required bool hovering,
-    required BoxConstraints additionalConstraints,
+    required super.additionalConstraints,
   })  : _state = state,
         _value = value,
         _activeColor = activeColor,
@@ -264,8 +267,7 @@ class _RenderToggleSwitch extends RenderConstrainedBox {
         _inactiveColor = inactiveColor,
         _hoverColor = hoverColor,
         _hovering = hovering,
-        _onChanged = onChanged,
-        super(additionalConstraints: additionalConstraints);
+        _onChanged = onChanged;
 
   final _ToggleSwitchState _state;
 

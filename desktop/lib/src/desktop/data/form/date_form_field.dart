@@ -26,32 +26,31 @@ class DateFormField extends FormField<String> {
     super.key,
     this.controller,
     String? initialValue,
-    TextInputAction? textInputAction, // TODO
+    TextInputAction? textInputAction, // TODO(as): field.
     TextStyle? style,
     StrutStyle? strutStyle,
     TextDirection? textDirection,
     TextAlign textAlign = TextAlign.start,
     bool autofocus = false,
     bool readOnly = false,
-    ToolbarOptions? toolbarOptions, // TODO
     bool? showCursor,
-    bool enableSuggestions = true, // TODO
-    MaxLengthEnforcement? maxLengthEnforcement, // TODO
-    bool expands = false, // TODO
-    int? maxLength, // TODO
+    bool enableSuggestions = true, // TODO(as): field.
+    MaxLengthEnforcement? maxLengthEnforcement, // TODO(as): field.
+    bool expands = false, // TODO(as): field.
+    int? maxLength, // TODO(as): field.
     this.onChanged,
     GestureTapCallback? onTap,
     VoidCallback? onEditingComplete,
     ValueChanged<String>? onFieldSubmitted,
     super.onSaved,
-    super.validator, // TODO
+    super.validator, // TODO(as): field.
     bool enabled = true,
     double cursorWidth = 2.0,
     double? cursorHeight,
     EdgeInsets scrollPadding = const EdgeInsets.all(20.0),
     bool? enableInteractiveSelection,
     TextSelectionControls? selectionControls,
-    Iterable<String>? autofillHints, // TODO
+    Iterable<String>? autofillHints, // TODO(as): field.
     AutovalidateMode? autovalidateMode,
     ScrollController? scrollController,
     super.restorationId,
@@ -130,7 +129,7 @@ class DateFormField extends FormField<String> {
                 DecoratedBox(
                   decoration: decoration,
                   child: Padding(
-                    padding: decoration.padding!,
+                    padding: decoration.padding,
                     child: Row(
                       children: [
                         Flexible(
@@ -151,7 +150,6 @@ class DateFormField extends FormField<String> {
                                 textDirection: textDirection,
                                 textCapitalization: TextCapitalization.none,
                                 autofocus: autofocus,
-                                toolbarOptions: toolbarOptions,
                                 readOnly: readOnly,
                                 showCursor: showCursor,
                                 autocorrect: false,
@@ -190,7 +188,7 @@ class DateFormField extends FormField<String> {
                           child: Button.icon(
                             Icons.edit_calendar,
                             active: field._calendarButtonActive,
-                            style: const ButtonThemeData(itemSpacing: 0.0),
+                            theme: const ButtonThemeData(itemSpacing: 0.0),
                             onPressed: field._openDatePicker,
                           ),
                         ),
@@ -264,7 +262,7 @@ class _TextFormFieldState extends FormFieldState<String> {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     final RenderBox button = context.findRenderObject()! as RenderBox;
-    final RenderBox overlay = Overlay.of(context, rootOverlay: true)!
+    final RenderBox overlay = Overlay.of(context, rootOverlay: true)
         .context
         .findRenderObject()! as RenderBox;
 
@@ -291,7 +289,7 @@ class _TextFormFieldState extends FormFieldState<String> {
       background: colorScheme.background[8],
     );
 
-    Overlay.of(context, rootOverlay: true)!.insert(controller._overlayEntry);
+    Overlay.of(context, rootOverlay: true).insert(controller._overlayEntry);
 
     return controller._completer.future;
   }
@@ -309,6 +307,9 @@ class _TextFormFieldState extends FormFieldState<String> {
   }
 
   Future<void> _openDatePicker() async {
+    final formatCompactDate =
+        DesktopLocalizations.of(context).formatCompactDate;
+
     setState(() => _calendarButtonActive = true);
 
     DateTime? newDate;
@@ -324,8 +325,7 @@ class _TextFormFieldState extends FormFieldState<String> {
     }
 
     if (newDate != null && _textFormField.onChanged != null) {
-      final newDateText =
-          DesktopLocalizations.of(context).formatCompactDate(newDate);
+      final newDateText = formatCompactDate(newDate);
 
       _effectiveController.text = newDateText;
       super.didChange(newDateText);

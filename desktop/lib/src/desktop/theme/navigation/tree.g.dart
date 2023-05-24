@@ -100,22 +100,42 @@ class TreeThemeData {
 
   @override
   String toString() {
-    return '''textStyle: The style for the text. The color is ignored. Defaults to: ```dart textTheme.body2.copyWith(fontSize: kDefaultFontSize) ```;color: The color of the tree item. Defaults to: ```dart textTheme.textLow ```;hoverColor: The hover color of the tree item. Defaults to: ```dart textTheme.textHigh ```;highlightColor: The highlight color of the tree item. Defaults to: ```dart colorScheme.primary[60] ```;''';
+    return r'''
+textStyle: The style for the text. The color is ignored.
+
+ Defaults to:
+
+ ```dart
+ textTheme.body2.copyWith(fontSize: kDefaultFontSize)
+ ```;;color: The color of the tree item.
+
+ Defaults to:
+
+ ```dart
+ textTheme.textLow
+ ```;;hoverColor: The hover color of the tree item.
+
+ Defaults to:
+
+ ```dart
+ textTheme.textHigh
+ ```;;highlightColor: The highlight color of the tree item.
+
+ Defaults to:
+
+ ```dart
+ colorScheme.primary[60]
+ ```;;
+''';
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-    return other is TreeThemeData &&
+  bool operator ==(covariant TreeThemeData other) {
+    return identical(this, other) ||
         other.textStyle == textStyle &&
-        other.color == color &&
-        other.hoverColor == hoverColor &&
-        other.highlightColor == highlightColor;
+            other.color == color &&
+            other.hoverColor == hoverColor &&
+            other.highlightColor == highlightColor;
   }
 }
 

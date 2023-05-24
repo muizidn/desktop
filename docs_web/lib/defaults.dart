@@ -1,8 +1,10 @@
 library defaults;
 
-import 'package:desktop/desktop.dart';
-import 'package:dart_style/dart_style.dart';
 import 'dart:math' as math;
+
+import 'package:dart_style/dart_style.dart';
+import 'package:desktop/desktop.dart';
+import 'package:markdown_docs_flutter/markdown_docs_flutter.dart';
 
 ///
 class StyleItem {
@@ -20,10 +22,10 @@ class StyleItem {
 class ItemTitle {
   ///
   const ItemTitle({
-    required this.body,
     this.codeText,
     this.options,
     required this.title,
+    required this.body,
   });
 
   ///
@@ -225,10 +227,10 @@ class Defaults extends StatefulWidget {
 
   ///
   final List<ItemTitle> items;
-  
+
   ///
   final String header;
-  
+
   ///
   final List<StyleItem>? styleItems;
 
@@ -307,21 +309,20 @@ class Defaults extends StatefulWidget {
   }
 
   ///
-  static List<StyleItem> createStyle(String value) => value
-      .split(';')
-      .map(
-        (e) => StyleItem(
-          title: e.split(':').first,
-          value: e.split(':').last,
-        ),
-      )
-      .toList();
+  static List<StyleItem> createStyle(String value) =>
+      value.split(';;').where((e) => e.indexOf(':') > 0).map(
+        (e) {
+          final index = e.indexOf(':');
+          return StyleItem(
+            title: e.substring(0, index).trim(),
+            value: e.substring(index + 1).trim(),
+          );
+        },
+      ).toList();
 
   ///
   static Widget createStylePage(
       BuildContext context, List<StyleItem> styleItems) {
-    final items = <Widget>[];
-
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
@@ -351,7 +352,7 @@ class Defaults extends StatefulWidget {
         rows: styleItems
             .map(
               (e) => ListTableRow(
-                  itemExtent: 60.0,
+                  itemExtent: null,
                   builder: (context, col) {
                     final Widget title;
 
@@ -364,19 +365,7 @@ class Defaults extends StatefulWidget {
                         ),
                       );
                     } else {
-                      final TextSpan textSpan =
-                          ThemeTextController(text: e.value).buildTextSpan(
-                        context: context,
-                        withComposing: false,
-                        style: textTheme.body1.copyWith(
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      );
-
-                      title = SelectableText.rich(
-                        textSpan,
-                        minLines: 1,
-                      );
+                      title = Markdown(text: e.value);
                     }
 
                     return Container(
@@ -389,27 +378,10 @@ class Defaults extends StatefulWidget {
             .toList(),
       ),
     );
-
-    for (final styleItem in styleItems) {
-      items.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [Defaults.createTitle(context, styleItem.title)],
-        ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: Column(
-        children: items,
-      ),
-    );
   }
 
   @override
-  DefaultsState createState() => DefaultsState();
+  State<Defaults> createState() => DefaultsState();
 }
 
 ///
@@ -471,7 +443,7 @@ class App extends StatelessWidget {
             builder: (context) {
               return _shouldBuildView[index]
                   ? widget.items[index].body(context)
-                  : Container();
+                  : const SizedBox();
             },
           ),
         ),
@@ -494,8 +466,8 @@ class App extends StatelessWidget {
           child: Tab(
             items: [
               TabItem(
-                itemBuilder: (context, _) => const Icon(Icons.visibility),
-                builder: (context, _) => Column(
+                itemBuilder: (context) => const Icon(Icons.visibility),
+                builder: (context) => Column(
                   children: [
                     Container(
                       decoration: Defaults.itemDecoration(context),
@@ -511,8 +483,8 @@ class App extends StatelessWidget {
               ),
               if (widget.styleItems != null)
                 TabItem(
-                  itemBuilder: (context, _) => const Icon(Icons.style),
-                  builder: (context, _) => Column(
+                  itemBuilder: (context) => const Icon(Icons.style),
+                  builder: (context) => Column(
                     children: [
                       Container(
                         decoration: Defaults.itemDecoration(context),
@@ -528,8 +500,8 @@ class App extends StatelessWidget {
                 ),
               if (widget.items[_index].codeText != null)
                 TabItem(
-                  itemBuilder: (context, _) => const Icon(Icons.code),
-                  builder: (context, _) => Container(
+                  itemBuilder: (context) => const Icon(Icons.code),
+                  builder: (context) => Container(
                     decoration: Defaults.itemDecoration(context),
                     padding: const EdgeInsets.symmetric(
                         vertical: 4.0, horizontal: 4.0),

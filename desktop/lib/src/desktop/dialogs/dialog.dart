@@ -4,8 +4,8 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/widgets.dart';
 
 import '../input/button.dart';
-import '../theme/theme.dart';
 import '../localizations.dart';
+import '../theme/theme.dart';
 
 const Duration _kDialogDuration = Duration(milliseconds: 200);
 const Curve _kDialogCurve = Curves.easeOut;
@@ -18,17 +18,16 @@ class DialogRoute<T> extends PopupRoute<T> {
     required BuildContext context,
     bool barrierDismissible = true,
     String? barrierLabel,
-    RouteSettings? settings,
     Color? barrierColor,
     ImageFilter? filter,
     this.themes,
+    super.settings,
   })  : _pageBuilder = pageBuilder,
         _barrierDismissible = barrierDismissible,
         _barrierLabel = barrierLabel ??
             DesktopLocalizations.of(context).modalBarrierDismissLabel,
         _barrierColor = barrierColor ?? DialogTheme.of(context).barrierColor!,
         super(
-          settings: settings,
           filter: filter ?? DialogTheme.of(context).imageFilter!,
         );
 
@@ -58,10 +57,10 @@ class DialogRoute<T> extends PopupRoute<T> {
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
     final Widget pageChild = Semantics(
-      child: _pageBuilder(context, animation, secondaryAnimation),
       scopesRoute: true,
       explicitChildNodes: true,
       focused: true,
+      child: _pageBuilder(context, animation, secondaryAnimation),
     );
 
     return themes?.wrap(pageChild) ?? pageChild;
@@ -95,15 +94,13 @@ class DialogAction {
 class Dialog extends StatelessWidget {
   /// Creates a [Dialog].
   const Dialog({
-    Key? key,
+    super.key,
     this.title,
     this.actions,
-    this.constraints,
-    //this.padding,
-    //this.dialogPadding,
     this.allowScroll = true,
+    this.theme,
     required this.body,
-  }) : super(key: key);
+  });
 
   /// The widget placed between the title and menus.
   final Widget body;
@@ -114,10 +111,10 @@ class Dialog extends StatelessWidget {
   /// Widgets to be placed at the bottom right of the dialog.
   final List<DialogAction>? actions;
 
-  /// The constraints for the dialog.
-  final BoxConstraints? constraints;
-
   final bool allowScroll;
+
+  /// The style [DialogThemeData] of the dialog.
+  final DialogThemeData? theme;
 
   static Future<T?> showDialog<T>(
     BuildContext context, {
@@ -128,7 +125,7 @@ class Dialog extends StatelessWidget {
     bool useRootNavigator = true,
     RouteSettings? routeSettings,
     List<DialogAction>? actions,
-    BoxConstraints? constraints,
+    DialogThemeData? theme,
     Widget? title,
     bool allowScroll = true,
   }) {
@@ -148,7 +145,7 @@ class Dialog extends StatelessWidget {
         pageBuilder: (context, animation, secondaryAnimation) => Dialog(
           body: body,
           actions: actions,
-          constraints: constraints,
+          theme: theme,
           title: title,
           allowScroll: allowScroll,
         ),
@@ -199,12 +196,13 @@ class Dialog extends StatelessWidget {
     final ThemeData themeData = Theme.of(context);
     final TextTheme textTheme = themeData.textTheme;
 
-    final DialogThemeData dialogThemeData = DialogTheme.of(context);
+    final DialogThemeData dialogThemeData =
+        DialogTheme.of(context).merge(theme);
 
     final Color backgroundColor = dialogThemeData.background!;
 
     Widget result = Container(
-      constraints: constraints ?? dialogThemeData.constraints,
+      constraints: dialogThemeData.constraints,
       color: backgroundColor,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -215,8 +213,8 @@ class Dialog extends StatelessWidget {
             Padding(
               padding: dialogThemeData.titlePadding!,
               child: DefaultTextStyle(
-                child: title!, // TODO(as): ???
                 style: dialogThemeData.titleTextStyle!,
+                child: title!,
               ),
             ),
           if (allowScroll)
@@ -237,9 +235,9 @@ class Dialog extends StatelessWidget {
                     0.0,
                   ),
                   child: DefaultTextStyle(
-                    child: body,
                     textAlign: dialogThemeData.bodyTextAlign!,
                     style: textTheme.body1,
+                    child: body,
                   ),
                 ),
               ),
@@ -248,9 +246,9 @@ class Dialog extends StatelessWidget {
             Padding(
               padding: dialogThemeData.bodyPadding!,
               child: DefaultTextStyle(
-                child: body,
                 textAlign: dialogThemeData.bodyTextAlign!,
                 style: textTheme.body1,
+                child: body,
               ),
             ),
           if (actions != null)
@@ -262,9 +260,12 @@ class Dialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: actions!
                     .map(
-                      (e) => Button.text(
-                        e.title,
-                        onPressed: e.onPressed,
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Button.text(
+                          e.title,
+                          onPressed: e.onPressed,
+                        ),
                       ),
                     )
                     .toList(),
@@ -280,15 +281,15 @@ class Dialog extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const Spacer(flex: 2),
-        Flexible(child: result, flex: 8),
+        Flexible(flex: 8, child: result),
         const Spacer(flex: 2),
       ],
     );
 
     return Focus(
-      child: Center(child: result),
       autofocus: true,
       debugLabel: 'Dialog',
+      child: Center(child: result),
     );
   }
 }

@@ -2,10 +2,10 @@ import 'package:desktop/desktop.dart';
 import '../defaults.dart';
 
 class ButtonPage extends StatefulWidget {
-  ButtonPage({Key? key}) : super(key: key);
+  const ButtonPage({super.key});
 
   @override
-  _ButtonPageState createState() => _ButtonPageState();
+  State<ButtonPage> createState() => _ButtonPageState();
 }
 
 class _ButtonPageState extends State<ButtonPage> {
@@ -118,7 +118,7 @@ return Button.text(
             child: Button(
               body: const Text('Custom Button'),
               // Uses a recommended color for the button.
-              themeData: ButtonThemeData(
+              theme: ButtonThemeData(
                 color: customColor,
                 highlightColor: Theme.of(context).textTheme.textLow,
               ),

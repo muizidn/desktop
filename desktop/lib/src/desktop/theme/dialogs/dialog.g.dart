@@ -57,7 +57,7 @@ class DialogThemeData {
   /// ```
   final EdgeInsets? bodyPadding;
 
-  /// The background [Color].
+  /// The background color.
   ///
   /// Defaults to:
   ///
@@ -66,7 +66,7 @@ class DialogThemeData {
   /// ```
   final Color? background;
 
-  /// The barrier [Color].
+  /// The barrier color.
   ///
   /// Defaults to:
   ///
@@ -174,27 +174,76 @@ class DialogThemeData {
 
   @override
   String toString() {
-    return '''constraints: The [BoxConstraints] of the [Dialog].  Defaults to:  ```dart BoxConstraints(minWidth: 640.0, minHeight: 120.0) ```;menuPadding: The [EdgeInsets] padding of the menu.  Defaults to:  ```dart EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0) ```;titlePadding: The title [EdgeInsets] pagging of the title.  Defaults to:  ```dart EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0) ```;bodyPadding: The body [EdgeInsets] padding of the body. Defaults to:  ```dart EdgeInsets.all(16.0) ```;background: The background [Color].  Defaults to:  ```dart colorScheme.background[0] ```;barrierColor: The barrier [Color].  Defaults to:  ```dart colorScheme.background[20].withOpacity(0.8) ```;titleTextStyle: The [TextStyle] for the title.  Defaults to:  ```dart textTheme.title ```;bodyTextAlign: The [TextAlign] of the body text.  Defaults to:  ```dart TextAlign.left ```;imageFilter: The [ImageFilter] used for the dialog`s barrier.  Defaults to:  ```dart ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0) ```;''';
+    return r'''
+constraints: The [BoxConstraints] of the [Dialog].
+ 
+ Defaults to:
+ 
+ ```dart
+ BoxConstraints(minWidth: 640.0, minHeight: 120.0)
+ ```;;menuPadding: The [EdgeInsets] padding of the menu.
+ 
+ Defaults to:
+ 
+ ```dart
+ EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 8.0)
+ ```;;titlePadding: The title [EdgeInsets] pagging of the title.
+ 
+ Defaults to:
+ 
+ ```dart
+ EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0)
+ ```;;bodyPadding: The body [EdgeInsets] padding of the body.
+ Defaults to:
+ 
+ ```dart
+ EdgeInsets.all(16.0)
+ ```;;background: The background color.
+ 
+ Defaults to:
+ 
+ ```dart
+ colorScheme.background[0]
+ ```;;barrierColor: The barrier color.
+ 
+ Defaults to:
+ 
+ ```dart
+ colorScheme.background[20].withOpacity(0.8)
+ ```;;titleTextStyle: The [TextStyle] for the title.
+ 
+ Defaults to:
+ 
+ ```dart
+ textTheme.title
+ ```;;bodyTextAlign: The [TextAlign] of the body text.
+ 
+ Defaults to:
+ 
+ ```dart
+ TextAlign.left
+ ```;;imageFilter: The [ImageFilter] used for the dialog`s barrier.
+ 
+ Defaults to:
+ 
+ ```dart
+ ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0)
+ ```;;
+''';
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-    return other is DialogThemeData &&
+  bool operator ==(covariant DialogThemeData other) {
+    return identical(this, other) ||
         other.constraints == constraints &&
-        other.menuPadding == menuPadding &&
-        other.titlePadding == titlePadding &&
-        other.bodyPadding == bodyPadding &&
-        other.background == background &&
-        other.barrierColor == barrierColor &&
-        other.titleTextStyle == titleTextStyle &&
-        other.bodyTextAlign == bodyTextAlign &&
-        other.imageFilter == imageFilter;
+            other.menuPadding == menuPadding &&
+            other.titlePadding == titlePadding &&
+            other.bodyPadding == bodyPadding &&
+            other.background == background &&
+            other.barrierColor == barrierColor &&
+            other.titleTextStyle == titleTextStyle &&
+            other.bodyTextAlign == bodyTextAlign &&
+            other.imageFilter == imageFilter;
   }
 }
 

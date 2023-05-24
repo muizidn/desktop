@@ -8,8 +8,8 @@ class TabDialog extends StatefulWidget {
     required this.child,
     this.height,
     this.width,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Widget child;
 
@@ -20,7 +20,7 @@ class TabDialog extends StatefulWidget {
   final double? width;
 
   @override
-  _TabDialogState createState() => _TabDialogState();
+  State<TabDialog> createState() => _TabDialogState();
 }
 
 class _TabDialogState extends State<TabDialog> {

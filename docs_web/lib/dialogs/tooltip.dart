@@ -2,10 +2,10 @@ import 'package:desktop/desktop.dart';
 import '../defaults.dart';
 
 class TooltipPage extends StatefulWidget {
-  TooltipPage({Key? key}) : super(key: key);
+  const TooltipPage({super.key});
 
   @override
-  _TooltipPageState createState() => _TooltipPageState();
+  State<TooltipPage> createState() => _TooltipPageState();
 }
 
 class _TooltipPageState extends State<TooltipPage> {
@@ -20,6 +20,7 @@ return Button.text(
   @override
   Widget build(BuildContext context) {
     return Defaults(
+      styleItems: Defaults.createStyle(TooltipTheme.of(context).toString()),
       header: 'Tooltip',
       items: [
         ItemTitle(

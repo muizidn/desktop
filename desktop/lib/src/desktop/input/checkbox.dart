@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
@@ -22,7 +21,7 @@ class Checkbox extends StatefulWidget {
     this.onChanged,
     this.focusNode,
     this.autofocus = false,
-    this.themeData,
+    this.theme,
     this.forceEnabled = false,
   })  : assert(tristate || value != null),
         assert(!forceEnabled || onChanged == null,
@@ -46,10 +45,11 @@ class Checkbox extends StatefulWidget {
   /// See [FocusableActionDetector] field [autofocus].
   final bool autofocus;
 
-  final CheckboxThemeData? themeData;
+  /// The style [CheckboxThemeData] of the checkbox.
+  final CheckboxThemeData? theme;
 
   @override
-  _CheckboxState createState() => _CheckboxState();
+  State<Checkbox> createState() => _CheckboxState();
 }
 
 class _CheckboxState extends State<Checkbox> with TickerProviderStateMixin {
@@ -179,7 +179,7 @@ class _CheckboxState extends State<Checkbox> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = CheckboxTheme.of(context).merge(widget.themeData);
+    final theme = CheckboxTheme.of(context).merge(widget.theme);
 
     final activeColor = theme.activeColor!;
     final hoverColor = widget.value != false
@@ -230,7 +230,6 @@ class _CheckboxState extends State<Checkbox> with TickerProviderStateMixin {
 
 class _CheckboxRenderObjectWidget extends LeafRenderObjectWidget {
   const _CheckboxRenderObjectWidget({
-    Key? key,
     this.onChanged,
     this.value,
     required this.state,
@@ -242,7 +241,7 @@ class _CheckboxRenderObjectWidget extends LeafRenderObjectWidget {
     required this.hovering,
     required this.additionalConstraints,
     required this.forceEnabled,
-  }) : super(key: key);
+  });
 
   final bool? value;
   final _CheckboxState state;
@@ -447,7 +446,7 @@ class _RenderCheckbox extends RenderConstrainedBox {
 
   Paint _createStrokePaint() {
     return Paint()
-      ..color = _state._hovering ? Color(0xFF000000) : foregroundColor
+      ..color = _state._hovering ? const Color(0xFF000000) : foregroundColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = _kStrokeWidth;
   }

@@ -11,8 +11,13 @@ import 'context_menu_layout.dart';
 const double _kDividerHeight = 1.0;
 const double _kDividerThickness = 1.0;
 
+const Duration _kContextDuration = Duration(milliseconds: 100);
+const Curve _kContextCurve = Curves.easeOutQuad;
+
+/// A context menu entry.
 abstract class ContextMenuEntry<T> extends StatefulWidget {
-  const ContextMenuEntry({Key? key}) : super(key: key);
+  /// Creates a [ContextMenuEntry].
+  const ContextMenuEntry({super.key});
 
   /// If the item represents the same given value.
   bool represents(T value);
@@ -24,16 +29,15 @@ abstract class ContextMenuEntry<T> extends StatefulWidget {
 
 class _MenuItem extends SingleChildRenderObjectWidget {
   const _MenuItem({
-    Key? key,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   @override
-  RenderObject createRenderObject(BuildContext context) => _RenderMenuItem();
+  RenderObject createRenderObject(BuildContext context) => _RenderMenuItem(null);
 }
 
 class _RenderMenuItem extends RenderShiftedBox {
-  _RenderMenuItem([RenderBox? child]) : super(child);
+  _RenderMenuItem([super.child]);
 
   @override
   Size computeDryLayout(BoxConstraints constraints) {
@@ -58,12 +62,12 @@ class _RenderMenuItem extends RenderShiftedBox {
 
 class ContextMenuItem<T> extends ContextMenuEntry<T> {
   const ContextMenuItem({
-    Key? key,
+    super.key,
     required this.value,
     this.enabled = true,
     this.height,
     required this.child,
-  }) : super(key: key);
+  });
 
   final T value;
 
@@ -107,7 +111,8 @@ class ContextMenuItemState<T, W extends ContextMenuItem<T>> extends State<W>
   }
 
   void _handleTapUp(TapUpDetails event) {
-    _ContextScope._of<T>(context)._close(widget.value);
+    Navigator.of(context).pop(widget.value);
+    // _ContextScope._of<T>(context)._close(widget.value);
   }
 
   void _handleTapCancel() {
@@ -166,10 +171,14 @@ class ContextMenuItemState<T, W extends ContextMenuItem<T>> extends State<W>
             horizontal: contextMenuThemeData.menuHorizontalPadding!,
           ),
           alignment: AlignmentDirectional.centerStart,
-          constraints: BoxConstraints(
-            minHeight: widget.height ?? contextMenuThemeData.itemHeight!,
-            maxHeight: widget.height ?? contextMenuThemeData.itemHeight!,
-          ),
+          constraints: widget.height != null
+              ? BoxConstraints(
+                  minHeight: widget.height!,
+                  maxHeight: widget.height!,
+                )
+              : BoxConstraints(
+                  minHeight: contextMenuThemeData.itemHeight!,
+                ),
           child: buildChild(),
         ),
       ),
@@ -202,13 +211,13 @@ class ContextMenuItemState<T, W extends ContextMenuItem<T>> extends State<W>
 /// A divider used in context menu.
 class ContextMenuDivider extends ContextMenuEntry {
   /// Creates a [ContextMenuDivider].
-  const ContextMenuDivider({Key? key}) : super(key: key);
+  const ContextMenuDivider({super.key});
 
   @override
   bool represents(void value) => false;
 
   @override
-  _ContextMenuDividerState createState() => _ContextMenuDividerState();
+  State<ContextMenuDivider> createState() => _ContextMenuDividerState();
 }
 
 class _ContextMenuDividerState extends State<ContextMenuDivider> {
@@ -230,10 +239,9 @@ class _ContextMenuDividerState extends State<ContextMenuDivider> {
 
 class _MenuItemSelected extends InheritedWidget {
   const _MenuItemSelected({
-    Key? key,
-    required Widget child,
+    required super.child,
     required this.selected,
-  }) : super(key: key, child: child);
+  });
 
   final bool selected;
 
@@ -249,9 +257,9 @@ class _MenuItemSelected extends InheritedWidget {
 
 class _ContextMenu<T> extends StatelessWidget {
   _ContextMenu({
-    Key? key,
+    super.key,
     this.semanticLabel,
-  }) : super(key: key);
+  });
 
   _ContextController<T> controller(BuildContext context) =>
       _ContextScope._of<T>(context);
@@ -271,15 +279,15 @@ class _ContextMenu<T> extends StatelessWidget {
       final bool selected;
 
       if (controller(context).value != null) {
-        selected = item.represents(controller(context).value!);
+        selected = item.represents(controller(context).value as T);
       } else {
         selected = false;
       }
 
       return _MenuItem(
         child: _MenuItemSelected(
-          child: item,
           selected: selected,
+          child: item,
         ),
       );
     }).toList();
@@ -314,19 +322,12 @@ class _ContextMenu<T> extends StatelessWidget {
       ),
     );
 
-    return FadeTransition(
-      opacity: CurvedAnimation(
-        parent: const AlwaysStoppedAnimation(1.0),
-        curve: Curves.easeOut,
-        reverseCurve: Curves.easeOut.flipped,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: contextMenuThemeData.background!,
       ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: contextMenuThemeData.background!,
-        ),
-        position: DecorationPosition.background,
-        child: child,
-      ),
+      position: DecorationPosition.background,
+      child: child,
     );
   }
 }
@@ -334,8 +335,8 @@ class _ContextMenu<T> extends StatelessWidget {
 class _ContextScope<T> extends InheritedWidget {
   const _ContextScope(
     this.contextController, {
-    required Widget child,
-  }) : super(child: child);
+    required super.child,
+  });
 
   final _ContextController<T> contextController;
 
@@ -357,38 +358,7 @@ class _ContextController<T> {
     required this.items,
     required this.position,
     this.contextMenuThemeData,
-    String? semanticLabel,
-  }) : _completer = Completer<T?>() {
-    _overlayEntry = OverlayEntry(
-      builder: (context) => _ContextScope<T>(
-        this,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => _close(null),
-          child: CustomSingleChildLayout(
-            delegate: ContextMenuLayoutDelegate(position),
-            child: SizedBox(
-              width: width,
-              child: GestureDetector(
-                behavior: HitTestBehavior.deferToChild,
-                onTap: () {},
-                child: contextMenuThemeData != null
-                    ? ContextMenuTheme(
-                        child: _ContextMenu<T>(semanticLabel: semanticLabel),
-                        data: contextMenuThemeData!,
-                      )
-                    : _ContextMenu<T>(semanticLabel: semanticLabel),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  late OverlayEntry _overlayEntry;
-
-  final Completer<T?> _completer;
+  });
 
   final List<ContextMenuEntry<T>> items;
 
@@ -399,10 +369,61 @@ class _ContextController<T> {
   final T? value;
 
   final ContextMenuThemeData? contextMenuThemeData;
+}
 
-  void _close(T? completeValue) {
-    _overlayEntry.remove();
-    _completer.complete(completeValue ?? value);
+class _ContextMenuRoute<T> extends PopupRoute<T> {
+  _ContextMenuRoute({
+    required RoutePageBuilder pageBuilder,
+    String? barrierLabel,
+    this.themes,
+    super.settings,
+  })  : _pageBuilder = pageBuilder,
+        _barrierLabel = barrierLabel;
+
+  final RoutePageBuilder _pageBuilder;
+
+  final _curve = _kContextCurve;
+
+  ///
+  final CapturedThemes? themes;
+
+  @override
+  bool get barrierDismissible => true;
+
+  @override
+  String? get barrierLabel => _barrierLabel;
+  final String? _barrierLabel;
+
+  @override
+  Color? get barrierColor => null;
+
+  @override
+  Duration get transitionDuration => _kContextDuration;
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    final Widget pageChild = Semantics(
+      scopesRoute: true,
+      explicitChildNodes: true,
+      focused: true,
+      child: _pageBuilder(context, animation, secondaryAnimation),
+    );
+
+    return themes?.wrap(pageChild) ?? pageChild;
+  }
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    return FadeTransition(
+      opacity: CurvedAnimation(
+        parent: animation,
+        curve: _curve,
+        reverseCurve: _curve.flipped,
+      ),
+      child: child,
+    );
   }
 }
 
@@ -424,13 +445,36 @@ Future<T?> showMenu<T>({
     width: width,
     items: items,
     position: position,
-    semanticLabel: semanticLabel,
     contextMenuThemeData: contextMenuThemeData,
   );
 
-  Overlay.of(context, rootOverlay: true)!.insert(controller._overlayEntry);
+  return Navigator.of(context, rootNavigator: true).push<T>(
+    _ContextMenuRoute(
+      pageBuilder: (context, animation, secondaryAnimation) => _ContextScope<T>(
+        controller,
+        child: CustomSingleChildLayout(
+          delegate: ContextMenuLayoutDelegate(position),
+          child: SizedBox(
+            width: width,
+            child: GestureDetector(
+              behavior: HitTestBehavior.deferToChild,
+              onTap: () {},
+              child: contextMenuThemeData != null
+                  ? ContextMenuTheme(
+                      data: contextMenuThemeData,
+                      child: _ContextMenu<T>(semanticLabel: semanticLabel),
+                    )
+                  : _ContextMenu<T>(semanticLabel: semanticLabel),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 
-  return controller._completer.future;
+  // Overlay.of(context, rootOverlay: true).insert(controller._overlayEntry);
+
+  // return controller._completer.future;
 }
 
 typedef ContextMenuItemSelected<T> = void Function(T value);

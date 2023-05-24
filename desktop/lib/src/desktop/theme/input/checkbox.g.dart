@@ -20,25 +20,67 @@ class CheckboxThemeData {
     this.containerSize,
   });
 
+  /// The disabled color.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// textTheme.textLow
+  /// ```
   final Color? disabledColor;
 
+  /// The active color.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// colorScheme.primary[50]
+  /// ```
   final Color? activeColor;
 
+  /// The active hover color.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// textTheme.textHigh
+  /// ```
   final Color? activeHoverColor;
 
+  /// The inactive color.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// textTheme.textLow
+  /// ```
   final Color? inactiveColor;
 
+  /// The inactive hover color.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// textTheme.textHigh
+  /// ```
   final Color? inactiveHoverColor;
 
+  /// The foreground color.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// colorScheme.shade[100]
+  /// ```
   final Color? foreground;
 
+  /// The container size.
   ///
+  /// Defaults to:
+  ///
+  /// ```dart
+  /// 32.0
+  /// ```
   final double? containerSize;
 
   /// Makes a copy of [CheckboxThemeData] overwriting selected fields.
@@ -103,25 +145,63 @@ class CheckboxThemeData {
 
   @override
   String toString() {
-    return '''disabledColor:;activeColor:;activeHoverColor:;inactiveColor:;inactiveHoverColor:;foreground:;containerSize:;''';
+    return r'''
+disabledColor: The disabled color.
+ 
+ Defaults to:
+ 
+ ```dart
+ textTheme.textLow
+ ```;;activeColor: The active color.
+ 
+ Defaults to:
+ 
+ ```dart
+ colorScheme.primary[50]
+ ```;;activeHoverColor: The active hover color.
+ 
+ Defaults to:
+ 
+ ```dart
+ textTheme.textHigh
+ ```;;inactiveColor: The inactive color.
+ 
+ Defaults to:
+ 
+ ```dart
+ textTheme.textLow
+ ```;;inactiveHoverColor: The inactive hover color.
+ 
+ Defaults to:
+ 
+ ```dart
+ textTheme.textHigh
+ ```;;foreground: The foreground color.
+ 
+ Defaults to:
+ 
+ ```dart
+ colorScheme.shade[100]
+ ```;;containerSize: The container size.
+ 
+ Defaults to:
+ 
+ ```dart
+ 32.0
+ ```;;
+''';
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-    return other is CheckboxThemeData &&
+  bool operator ==(covariant CheckboxThemeData other) {
+    return identical(this, other) ||
         other.disabledColor == disabledColor &&
-        other.activeColor == activeColor &&
-        other.activeHoverColor == activeHoverColor &&
-        other.inactiveColor == inactiveColor &&
-        other.inactiveHoverColor == inactiveHoverColor &&
-        other.foreground == foreground &&
-        other.containerSize == containerSize;
+            other.activeColor == activeColor &&
+            other.activeHoverColor == activeHoverColor &&
+            other.inactiveColor == inactiveColor &&
+            other.inactiveHoverColor == inactiveHoverColor &&
+            other.foreground == foreground &&
+            other.containerSize == containerSize;
   }
 }
 

@@ -1,31 +1,22 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import 'input/button.dart';
-import 'input/checkbox.dart';
 import 'color_scheme.dart';
-import 'dialogs/context_menu.dart';
-import 'dialogs/dialog.dart';
-import 'input/drop_down.dart';
-import 'input/hyperlink.dart';
-import 'data/list_table.dart';
-import 'navigation/nav.dart';
-import 'input/radio.dart';
+import 'data/data.dart';
+import 'dialogs/dialogs.dart';
+import 'input/input.dart';
+import 'navigation/navigation.dart';
 import 'scrolling/scrollbar.dart';
-import 'input/slider.dart';
-import 'navigation/tab.dart';
+import 'status/status.dart';
 import 'theme_text.dart';
-import 'input/toggle_switch.dart';
-import 'navigation/tree.dart';
 
 @immutable
 class Theme extends StatefulWidget {
   const Theme({
-    Key? key,
+    super.key,
     required this.data,
     required this.child,
-  }) : super(key: key);
+  });
 
   final ThemeData data;
 
@@ -60,7 +51,7 @@ class Theme extends StatefulWidget {
   }
 
   @override
-  _ThemeState createState() => _ThemeState();
+  State<Theme> createState() => _ThemeState();
 }
 
 class _ThemeState extends State<Theme> {
@@ -88,10 +79,9 @@ class _ThemeState extends State<Theme> {
 
 class _InheritedTheme extends InheritedTheme {
   const _InheritedTheme({
-    Key? key,
     required this.theme,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   final _ThemeState theme;
 
@@ -116,11 +106,13 @@ class ThemeData {
     required Brightness brightness,
     PrimaryColor? primaryColor,
     BackgroundColor? backgroundColor,
+    ShadeColor? shadeColor,
   }) {
     final colorScheme = ColorScheme(
       brightness,
       primary: primaryColor,
       backgroundColor: backgroundColor,
+      shade: shadeColor,
     );
 
     return ThemeData._raw(
@@ -141,8 +133,25 @@ class ThemeData {
       tabTheme: const TabThemeData(),
       treeTheme: const TreeThemeData(),
       listTableTheme: const ListTableThemeData(),
+      circularProgressIndicatorTheme:
+          const CircularProgressIndicatorThemeData(),
+      linearProgressIndicatorTheme: const LinearProgressIndicatorThemeData(),
+      breadcrumbTheme: const BreadcrumbThemeData(),
+      messageTheme: const MessageThemeData(),
+      tooltipTheme: const TooltipThemeData(),
     );
   }
+
+  /// Creates a theme with light brightness.
+  factory ThemeData.light([PrimaryColor? primaryColor]) =>
+      ThemeData(brightness: Brightness.light, primaryColor: primaryColor);
+
+  /// Creates a theme with dart brightness.
+  factory ThemeData.dark([PrimaryColor? primaryColor]) =>
+      ThemeData(brightness: Brightness.dark, primaryColor: primaryColor);
+
+  /// Creates a default theme.
+  factory ThemeData.fallback() => ThemeData(brightness: Brightness.dark);
 
   const ThemeData._raw({
     required this.brightness,
@@ -162,38 +171,45 @@ class ThemeData {
     required this.tabTheme,
     required this.treeTheme,
     required this.listTableTheme,
+    required this.circularProgressIndicatorTheme,
+    required this.linearProgressIndicatorTheme,
+    required this.breadcrumbTheme,
+    required this.messageTheme,
+    required this.tooltipTheme,
   });
 
-  factory ThemeData.light([PrimaryColor? primaryColor]) =>
-      ThemeData(brightness: Brightness.light, primaryColor: primaryColor);
-
-  factory ThemeData.dark([PrimaryColor? primaryColor]) =>
-      ThemeData(brightness: Brightness.dark, primaryColor: primaryColor);
-
+  /// Creates a theme with a given brightness.
   ThemeData withBrightness(Brightness brightness) {
     final colorScheme = this.colorScheme.withBrightness(brightness);
     final textTheme = TextTheme.withColorScheme(colorScheme);
 
     return ThemeData._raw(
-        brightness: brightness,
-        colorScheme: colorScheme,
-        textTheme: textTheme,
-        navTheme: navTheme,
-        buttonTheme: buttonTheme,
-        dropDownTheme: dropDownTheme,
-        dialogTheme: dialogTheme,
-        contextMenuTheme: contextMenuTheme,
-        hyperlinkTheme: hyperlinkTheme,
-        radioTheme: radioTheme,
-        checkboxTheme: checkboxTheme,
-        sliderTheme: sliderTheme,
-        toggleSwitchTheme: toggleSwitchTheme,
-        scrollbarTheme: scrollbarTheme,
-        tabTheme: tabTheme,
-        treeTheme: treeTheme,
-        listTableTheme: listTableTheme);
+      brightness: brightness,
+      colorScheme: colorScheme,
+      textTheme: textTheme,
+      navTheme: navTheme,
+      buttonTheme: buttonTheme,
+      dropDownTheme: dropDownTheme,
+      dialogTheme: dialogTheme,
+      contextMenuTheme: contextMenuTheme,
+      hyperlinkTheme: hyperlinkTheme,
+      radioTheme: radioTheme,
+      checkboxTheme: checkboxTheme,
+      sliderTheme: sliderTheme,
+      toggleSwitchTheme: toggleSwitchTheme,
+      scrollbarTheme: scrollbarTheme,
+      tabTheme: tabTheme,
+      treeTheme: treeTheme,
+      listTableTheme: listTableTheme,
+      circularProgressIndicatorTheme: circularProgressIndicatorTheme,
+      linearProgressIndicatorTheme: linearProgressIndicatorTheme,
+      breadcrumbTheme: breadcrumbTheme,
+      messageTheme: messageTheme,
+      tooltipTheme: tooltipTheme,
+    );
   }
 
+  /// Creates a theme with selected fields.
   ThemeData copyWith({
     Brightness? brightness,
     ColorScheme? colorScheme,
@@ -202,16 +218,21 @@ class ThemeData {
     TabThemeData? tabTheme,
     TreeThemeData? treeTheme,
     ButtonThemeData? buttonTheme,
-    DropDownThemeData? dropDownButtonTheme,
+    DropDownThemeData? dropDownTheme,
     DialogThemeData? dialogTheme,
     ContextMenuThemeData? contextMenuTheme,
-    HyperlinkThemeData? hyperlinkButtonTheme,
-    RadioThemeData? radioButtonTheme,
+    HyperlinkThemeData? hyperlinkTheme,
+    RadioThemeData? radioTheme,
     CheckboxThemeData? checkboxTheme,
     ToggleSwitchThemeData? toggleSwitchTheme,
     SliderThemeData? sliderTheme,
     ScrollbarThemeData? scrollbarTheme,
     ListTableThemeData? listTableTheme,
+    CircularProgressIndicatorThemeData? circularProgressIndicatorTheme,
+    LinearProgressIndicatorThemeData? linearProgressIndicatorTheme,
+    BreadcrumbThemeData? breadcrumbTheme,
+    MessageThemeData? messageTheme,
+    TooltipThemeData? tooltipTheme,
   }) {
     final newColorScheme =
         colorScheme?.withBrightness(brightness ?? this.brightness) ??
@@ -222,11 +243,11 @@ class ThemeData {
       textTheme: textTheme ?? TextTheme.withColorScheme(newColorScheme),
       navTheme: navTheme ?? this.navTheme,
       buttonTheme: buttonTheme ?? this.buttonTheme,
-      dropDownTheme: dropDownButtonTheme ?? this.dropDownTheme,
+      dropDownTheme: dropDownTheme ?? this.dropDownTheme,
       dialogTheme: dialogTheme ?? this.dialogTheme,
       contextMenuTheme: contextMenuTheme ?? this.contextMenuTheme,
-      hyperlinkTheme: hyperlinkButtonTheme ?? this.hyperlinkTheme,
-      radioTheme: radioButtonTheme ?? this.radioTheme,
+      hyperlinkTheme: hyperlinkTheme ?? this.hyperlinkTheme,
+      radioTheme: radioTheme ?? this.radioTheme,
       checkboxTheme: checkboxTheme ?? this.checkboxTheme,
       sliderTheme: sliderTheme ?? this.sliderTheme,
       toggleSwitchTheme: toggleSwitchTheme ?? this.toggleSwitchTheme,
@@ -234,10 +255,15 @@ class ThemeData {
       tabTheme: tabTheme ?? this.tabTheme,
       treeTheme: treeTheme ?? this.treeTheme,
       listTableTheme: listTableTheme ?? this.listTableTheme,
+      circularProgressIndicatorTheme:
+          circularProgressIndicatorTheme ?? this.circularProgressIndicatorTheme,
+      linearProgressIndicatorTheme:
+          linearProgressIndicatorTheme ?? this.linearProgressIndicatorTheme,
+      breadcrumbTheme: breadcrumbTheme ?? this.breadcrumbTheme,
+      messageTheme: messageTheme ?? this.messageTheme,
+      tooltipTheme: tooltipTheme ?? this.tooltipTheme,
     );
   }
-
-  factory ThemeData.fallback() => ThemeData(brightness: Brightness.dark);
 
   final Brightness brightness;
 
@@ -273,6 +299,16 @@ class ThemeData {
 
   final ListTableThemeData listTableTheme;
 
+  final CircularProgressIndicatorThemeData circularProgressIndicatorTheme;
+
+  final LinearProgressIndicatorThemeData linearProgressIndicatorTheme;
+
+  final BreadcrumbThemeData breadcrumbTheme;
+
+  final MessageThemeData messageTheme;
+
+  final TooltipThemeData tooltipTheme;
+
   ThemeData get invertedTheme {
     final Brightness inverseBrightness =
         brightness == Brightness.dark ? Brightness.light : Brightness.dark;
@@ -297,6 +333,75 @@ class ThemeData {
       tabTheme: tabTheme,
       treeTheme: treeTheme,
       listTableTheme: listTableTheme,
+      circularProgressIndicatorTheme: circularProgressIndicatorTheme,
+      linearProgressIndicatorTheme: linearProgressIndicatorTheme,
+      breadcrumbTheme: breadcrumbTheme,
+      messageTheme: messageTheme,
+      tooltipTheme: tooltipTheme,
     );
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(
+      brightness,
+      colorScheme,
+      textTheme,
+      navTheme,
+      buttonTheme,
+      dropDownTheme,
+      dialogTheme,
+      contextMenuTheme,
+      hyperlinkTheme,
+      radioTheme,
+      checkboxTheme,
+      sliderTheme,
+      toggleSwitchTheme,
+      scrollbarTheme,
+      tabTheme,
+      treeTheme,
+      listTableTheme,
+      circularProgressIndicatorTheme,
+      linearProgressIndicatorTheme,
+      Object.hash(
+        breadcrumbTheme,
+        messageTheme,
+        tooltipTheme,
+      ),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is ThemeData &&
+        other.brightness == brightness &&
+        other.colorScheme == colorScheme &&
+        other.textTheme == textTheme &&
+        other.navTheme == navTheme &&
+        other.buttonTheme == buttonTheme &&
+        other.dropDownTheme == dropDownTheme &&
+        other.dialogTheme == dialogTheme &&
+        other.contextMenuTheme == contextMenuTheme &&
+        other.hyperlinkTheme == hyperlinkTheme &&
+        other.radioTheme == radioTheme &&
+        other.checkboxTheme == checkboxTheme &&
+        other.sliderTheme == sliderTheme &&
+        other.toggleSwitchTheme == toggleSwitchTheme &&
+        other.scrollbarTheme == scrollbarTheme &&
+        other.tabTheme == tabTheme &&
+        other.treeTheme == treeTheme &&
+        other.listTableTheme == listTableTheme &&
+        other.circularProgressIndicatorTheme ==
+            circularProgressIndicatorTheme &&
+        other.linearProgressIndicatorTheme == linearProgressIndicatorTheme &&
+        other.breadcrumbTheme == breadcrumbTheme &&
+        other.messageTheme == messageTheme &&
+        other.tooltipTheme == tooltipTheme;
   }
 }

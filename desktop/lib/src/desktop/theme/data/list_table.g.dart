@@ -158,31 +158,27 @@ class ListTableThemeData {
 
   @override
   String toString() {
-    return '''iconThemeData:;itemHeight:;textStyle:;selectedColor:;selectedHighlightColor:;selectedHoverColor:;hoverColor:;highlightColor:;background:;borderColor:;borderHoverColor:;borderHighlightColor:;borderIndicatorColor:;''';
+    return r'''
+iconThemeData:;;itemHeight:;;textStyle:;;selectedColor:;;selectedHighlightColor:;;selectedHoverColor:;;hoverColor:;;highlightColor:;;background:;;borderColor:;;borderHoverColor:;;borderHighlightColor:;;borderIndicatorColor:;;
+''';
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) {
-      return true;
-    }
-    if (other.runtimeType != runtimeType) {
-      return false;
-    }
-    return other is ListTableThemeData &&
+  bool operator ==(covariant ListTableThemeData other) {
+    return identical(this, other) ||
         other.iconThemeData == iconThemeData &&
-        other.itemHeight == itemHeight &&
-        other.textStyle == textStyle &&
-        other.selectedColor == selectedColor &&
-        other.selectedHighlightColor == selectedHighlightColor &&
-        other.selectedHoverColor == selectedHoverColor &&
-        other.hoverColor == hoverColor &&
-        other.highlightColor == highlightColor &&
-        other.background == background &&
-        other.borderColor == borderColor &&
-        other.borderHoverColor == borderHoverColor &&
-        other.borderHighlightColor == borderHighlightColor &&
-        other.borderIndicatorColor == borderIndicatorColor;
+            other.itemHeight == itemHeight &&
+            other.textStyle == textStyle &&
+            other.selectedColor == selectedColor &&
+            other.selectedHighlightColor == selectedHighlightColor &&
+            other.selectedHoverColor == selectedHoverColor &&
+            other.hoverColor == hoverColor &&
+            other.highlightColor == highlightColor &&
+            other.background == background &&
+            other.borderColor == borderColor &&
+            other.borderHoverColor == borderHoverColor &&
+            other.borderHighlightColor == borderHighlightColor &&
+            other.borderIndicatorColor == borderIndicatorColor;
   }
 }
 

@@ -5,11 +5,11 @@ import '../theme/theme.dart';
 import 'nav_button.dart';
 import 'tab_scope.dart';
 
-export 'tab_scope.dart' show TabScope, RouteBuilder;
+export 'tab_scope.dart' show TabScope;
 
 const int _kIntialIndexValue = 0;
 
-const Duration _kMenuTransitionDuration = Duration(milliseconds: 300);
+const Duration _kMenuTransitionDuration = Duration(milliseconds: 400);
 
 class NavItem {
   const NavItem({
@@ -80,15 +80,14 @@ class NavItem {
 class Nav extends StatefulWidget {
   /// Creates a navigation bar.
   const Nav({
-    Key? key,
+    super.key,
     required this.items,
     this.navAxis = Axis.vertical,
     this.trailingMenu,
     this.onPressBackButton,
     this.isBackButtonEnabled,
     this.visible = true,
-  })  : assert(items.length > 0),
-        super(key: key);
+  })  : assert(items.length > 0);
 
   /// The items with builder and route names for transition among pages.
   final List<NavItem> items;
@@ -96,7 +95,9 @@ class Nav extends StatefulWidget {
   /// Menu before the navigation items.
   final List<NavItem>? trailingMenu;
 
-  /// Callback for the back button. Defaults to null.
+  /// Callback for the back button. 
+  /// 
+  /// Defaults to null.
   final VoidCallback? onPressBackButton;
 
   /// If the back button should respond to user input.
@@ -109,7 +110,7 @@ class Nav extends StatefulWidget {
   final bool visible;
 
   @override
-  _NavState createState() => _NavState();
+  State<Nav> createState() => _NavState();
 }
 
 class _NavState extends State<Nav> with SingleTickerProviderStateMixin {
@@ -141,13 +142,12 @@ class _NavState extends State<Nav> with SingleTickerProviderStateMixin {
   late Tween<Offset> _menuOffsetTween;
   final ColorTween _menuColorTween = ColorTween();
 
-  static const Curve _animationCurve = Curves.easeInOutSine;
+  static const Curve _animationCurve = Curves.fastLinearToSlowEaseIn;
 
   void _createAnimation() {
     _menuAnimation = CurvedAnimation(
       parent: _menuController,
       curve: _animationCurve,
-      reverseCurve: _animationCurve,
     );
 
     final Offset begin = widget.navAxis == Axis.vertical
@@ -216,7 +216,7 @@ class _NavState extends State<Nav> with SingleTickerProviderStateMixin {
                 color: _menuColorTween.evaluate(_menuAnimation),
                 child: GestureDetector(
                   behavior: HitTestBehavior.deferToChild,
-                  onTap: () {}, // TODO(as): Better way to do this?
+                  onTap: () {},
                   child: ClipRect(
                     child: FractionalTranslation(
                       translation: _menuOffsetTween.evaluate(_menuAnimation),
@@ -404,12 +404,7 @@ class _NavState extends State<Nav> with SingleTickerProviderStateMixin {
           );
         });
   }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
+  
   @override
   void didUpdateWidget(Nav oldWidget) {
     super.didUpdateWidget(oldWidget);

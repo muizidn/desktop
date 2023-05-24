@@ -67,7 +67,7 @@ class _TextFieldSelectionGestureDetectorBuilder
   }
 
   @override
-  void onSingleTapUp(TapUpDetails details) {
+  void onSingleTapUp(TapDragUpDetails details) {
     editableText.hideToolbar();
     if (delegate.selectionEnabled) {
       switch (defaultTargetPlatform) {
@@ -93,6 +93,8 @@ class _TextFieldSelectionGestureDetectorBuilder
         case TargetPlatform.linux:
         case TargetPlatform.windows:
           renderEditable.selectPosition(cause: SelectionChangedCause.tap);
+          break;
+        default:
           break;
       }
     }
@@ -130,7 +132,7 @@ class _TextFieldSelectionGestureDetectorBuilder
 class TextField extends StatefulWidget {
   /// Creates a desktop text field.
   const TextField({
-    Key? key,
+    super.key,
     this.autocorrect = true,
     this.autofocus = false,
     this.clipBehavior = Clip.hardEdge,
@@ -173,7 +175,6 @@ class TextField extends StatefulWidget {
     SmartDashesType? smartDashesType,
     SmartQuotesType? smartQuotesType,
     TextInputType? keyboardType,
-    ToolbarOptions? toolbarOptions,
     this.scrollPadding = const EdgeInsets.all(0),
     this.textCapitalization = TextCapitalization.none,
     this.maxLengthEnforcement,
@@ -199,20 +200,7 @@ class TextField extends StatefulWidget {
         keyboardType = keyboardType ??
             (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
         assert(maxLines == null || maxLines > 0),
-        assert(minLines == null || minLines > 0),
-        toolbarOptions = toolbarOptions ??
-            (obscureText
-                ? const ToolbarOptions(
-                    selectAll: true,
-                    paste: true,
-                  )
-                : const ToolbarOptions(
-                    copy: true,
-                    cut: true,
-                    selectAll: true,
-                    paste: true,
-                  )),
-        super(key: key);
+        assert(minLines == null || minLines > 0);
 
   /// {@macro flutter.widgets.Focus.focusNode}
   final FocusNode? focusNode;
@@ -271,8 +259,6 @@ class TextField extends StatefulWidget {
 
   /// {@macro flutter.widgets.editableText.expands}
   final bool expands;
-
-  final ToolbarOptions toolbarOptions;
 
   /// {@macro flutter.widgets.editableText.minLines}
   final int? minLines;
@@ -357,14 +343,12 @@ class TextField extends StatefulWidget {
   final EdgeInsets? padding;
 
   @override
-  _TextFieldState createState() => _TextFieldState();
+  State<TextField> createState() => _TextFieldState();
 }
 
 class _TextFieldState extends State<TextField>
     with AutomaticKeepAliveClientMixin<TextField>, RestorationMixin
     implements TextSelectionGestureDetectorBuilderDelegate {
-  final GlobalKey _clearGlobalKey = GlobalKey();
-
   RestorableTextEditingController? _controller;
   TextEditingController get _effectiveController =>
       widget.controller ?? _controller!.value;
@@ -581,7 +565,6 @@ class _TextFieldState extends State<TextField>
       textCapitalization: widget.textCapitalization,
       textDirection: widget.textDirection,
       textInputAction: widget.textInputAction,
-      toolbarOptions: widget.toolbarOptions,
       mouseCursor: MouseCursor.defer,
     );
 
@@ -600,7 +583,7 @@ class _TextFieldState extends State<TextField>
                 bucket: bucket,
                 child: Container(
                   decoration: decoration,
-                  height: isMultiline ? _kDefaultHeight : null,
+                  height: !isMultiline ? _kDefaultHeight : null,
                   alignment: isMultiline ? Alignment.topLeft : Alignment.center,
                   child: Padding(
                     padding: widget.padding ??

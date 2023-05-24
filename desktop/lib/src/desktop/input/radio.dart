@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
@@ -17,12 +16,13 @@ const double _kContainerWidth = 32.0;
 class Radio extends StatefulWidget {
   ///
   const Radio({
-    Key? key,
+    super.key,
     required this.value,
     this.onChanged,
     this.focusNode,
     this.autofocus = false,
-  }) : super(key: key);
+    this.theme,
+  });
 
   final bool value;
 
@@ -32,8 +32,11 @@ class Radio extends StatefulWidget {
 
   final bool autofocus;
 
+  /// The style [RadioThemeData] of the radio.
+  final RadioThemeData? theme;
+
   @override
-  _RadioState createState() => _RadioState();
+  State<Radio> createState() => _RadioState();
 }
 
 class _RadioState extends State<Radio> with TickerProviderStateMixin {
@@ -138,15 +141,15 @@ class _RadioState extends State<Radio> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = RadioTheme.of(context);
+    final RadioThemeData theme = RadioTheme.of(context).merge(widget.theme);
 
-    final activeColor = theme.activeColor!;
-    final hoverColor =
+    final Color activeColor = theme.activeColor!;
+    final Color hoverColor =
         widget.value ? theme.activeHoverColor! : theme.inactiveHoverColor!;
-    final inactiveColor = theme.inactiveColor!;
-    final foregroundColor = theme.foreground!;
+    final Color inactiveColor = theme.inactiveColor!;
+    final Color foregroundColor = theme.foreground!;
     // TODO(as): final focusColor = theme.activeHoverColor!;
-    final disabledColor = theme.disabledColor!;
+    final Color disabledColor = theme.disabledColor!;
 
     const Size size = Size.square(_kOuterRadius * 2.0);
 
@@ -190,7 +193,6 @@ class _RadioState extends State<Radio> with TickerProviderStateMixin {
 
 class _RadioRenderObjectWidget extends LeafRenderObjectWidget {
   const _RadioRenderObjectWidget({
-    Key? key,
     this.onChanged,
     required this.value,
     required this.state,
@@ -201,7 +203,7 @@ class _RadioRenderObjectWidget extends LeafRenderObjectWidget {
     required this.hoverColor,
     required this.hovering,
     required this.additionalConstraints,
-  }) : super(key: key);
+  });
 
   final bool value;
   final _RadioState state;

@@ -3,7 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../icons.dart';
 import '../../input/button.dart';
 import '../../localizations.dart';
 import '../../theme/theme.dart';
@@ -64,7 +63,7 @@ class MonthPicker extends StatefulWidget {
   final SelectableDayPredicate? selectableDayPredicate;
 
   @override
-  MonthPickerState createState() => MonthPickerState();
+  State<MonthPicker> createState() => MonthPickerState();
 }
 
 ///
@@ -480,7 +479,7 @@ class _DayPicker extends StatefulWidget {
   final SelectableDayPredicate? selectableDayPredicate;
 
   @override
-  _DayPickerState createState() => _DayPickerState();
+  State<_DayPicker> createState() => _DayPickerState();
 }
 
 class _DayPickerState extends State<_DayPicker> {
@@ -560,7 +559,7 @@ class _DayPickerState extends State<_DayPicker> {
         active: isSelectedDay,
         padding: EdgeInsets.zero,
         focusNode: _dayFocusNodes[day - 1],
-        style: ButtonThemeData(
+        theme: ButtonThemeData(
           background: const Color(0x00000000),
           highlightBackground: selectedDayBackground,
           foreground: dayColor,
@@ -590,10 +589,10 @@ class _DayPickerState extends State<_DayPicker> {
     }
 
     return DaysMonth(
-      children: dayItems,
       daysOffset: dayOffset,
       boxSize: const Size(_kBoxSize, _kBoxSize),
       columns: DateTime.daysPerWeek,
+      children: dayItems,
     );
   }
 }

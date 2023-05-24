@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import '../color_scheme.dart';
@@ -46,7 +45,7 @@ class _DialogThemeData {
   /// ```
   EdgeInsets get menuPadding => _kMenuPadding;
 
-  /// The title [EdgeInsets] pagging of the title.
+  /// The title [EdgeInsets] padding of the title.
   /// 
   /// Defaults to:
   /// 
@@ -63,7 +62,7 @@ class _DialogThemeData {
   /// ```
   EdgeInsets get bodyPadding => _kbodyPadding;
 
-  /// The background [Color].
+  /// The background color.
   /// 
   /// Defaults to:
   /// 
@@ -72,7 +71,7 @@ class _DialogThemeData {
   /// ```
   Color get background => colorScheme.background[0];
 
-  /// The barrier [Color].
+  /// The barrier color.
   /// 
   /// Defaults to:
   /// 

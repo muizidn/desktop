@@ -1,5 +1,53 @@
 # Changelog
 
+## 4.4.0
+
+- Add long press callback in `Button`.
+
+## 4.3.0
+
+- New dart version support.
+
+## 4.2.2
+
+- Fix sdk version.
+
+## 4.2.1
+
+- Fix dependencies.
+
+## 4.2.0
+
+- Fix tab menu animation.
+- Implementation of controlled `Tree`.
+
+## 4.1.2
+
+- Fix type error.
+
+## 4.1.1
+
+- Use `Navigator` for context menus.
+
+## 4.1.0
+
+- Allow implementing `ShadeColor`, `BackgroundColor` and `PrimaryColor` for custom themes in `ThemeData`.
+
+## 4.0.0
+
+- Update for stable channel.
+- Theme option for widgets.
+- New options for `Tab`.
+- Possibility to drag `ListTable` columns.
+- Initial implementation for `DatePickerDialog`.
+- Initial implementation for `SelectableText`.
+- Initial impletmenation for `TextFormField`.
+- Fix progress widget styles.
+
+## 4.0.0-dev.7
+
+- Creates theme for linear and circular progress indicators.
+
 ## 4.0.0-dev.6
 
 - Add support for `ListTable` in unbounded constraints.

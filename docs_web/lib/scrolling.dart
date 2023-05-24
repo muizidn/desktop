@@ -49,10 +49,10 @@ const _kPageDuration = Duration(milliseconds: 200);
 const _kPageCurve = Curves.easeOut;
 
 class ScrollingPage extends StatefulWidget {
-  ScrollingPage({Key? key}) : super(key: key);
+  const ScrollingPage({super.key});
 
   @override
-  _ScrollingPageState createState() => _ScrollingPageState();
+  State<ScrollingPage> createState() => _ScrollingPageState();
 }
 
 class _ScrollingPageState extends State<ScrollingPage> {
@@ -157,8 +157,8 @@ class _ImagePage extends StatefulWidget {
     this.requestNext,
     this.requestPrevious,
     required this.close,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final int assetIndex;
 
@@ -168,7 +168,7 @@ class _ImagePage extends StatefulWidget {
   final RequestAssetNameCallback? requestPrevious;
 
   @override
-  _ImagePageState createState() => _ImagePageState();
+  State<_ImagePage> createState() => _ImagePageState();
 }
 
 class _ImagePageState extends State<_ImagePage> with TickerProviderStateMixin {
@@ -374,7 +374,7 @@ class _ImagePageState extends State<_ImagePage> with TickerProviderStateMixin {
                             ),
                             if (widget.requestPrevious != null)
                               Button.icon(
-                                Icons.arrow_back,
+                                Icons.keyboard_arrow_left,
                                 onPressed: canRequestPrevious
                                     ? _requestPrevious
                                     : null,
@@ -384,7 +384,7 @@ class _ImagePageState extends State<_ImagePage> with TickerProviderStateMixin {
                               Padding(
                                 padding: const EdgeInsets.only(left: 12),
                                 child: Button.icon(
-                                  Icons.arrow_forward,
+                                  Icons.keyboard_arrow_right,
                                   onPressed:
                                       canRequestNext ? _requestNext : null,
                                   tooltip: 'Next',
